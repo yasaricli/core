@@ -1,1 +1,37 @@
-/* CSS declarations go here */
+body { padding:0px; margin:0px; font-family: "Whitney A","Whitney B"; font-style: normal; -webkit-font-smoothing: antialiased; }
+
+canvas { cursor: crosshair; z-index: 1; }
+
+#panels { width: 100%; position: absolute; z-index: 3; bottom:50px; }
+#background { border: none; z-index: 0; }
+
+.btn { text-decoration: none; font-weight:bold; display: block; padding: 15px; cursor: pointer; text-align: center; text-decoration: none; text-transform: uppercase; outline: 0; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none }
+.btn:hover { background: #4d4d4d; color: #fff }
+.btn.is-large { font-size: 25px; margin:auto; width:75%; }
+
+.btn.is-purple { background-color: #8c88cd; color: #fff; }
+.btn.is-purple:hover { background-color: #7a76c6; }
+
+.btn.is-red { background-color: #e86f69; color: #fff; }
+.btn.is-red:hover { background-color: #e45a53; }
+
+.btn.is-green { background-color: #93cd7e; color: #fff; }
+.btn.is-green:hover { background-color: #84c66c; }
+
+.btn.is-yellow { background-color: #ffdf8f; color:#fff; }
+.btn.is-yellow:hover { background-color: #ffd875; }
+
+.btn.is-black { background-color: #3a3a3a; color: #fff; }
+.btn.is-black:hover { background-color: #2d2d2d; }
+
+.btn.is-blue { background-color: #53C5E3; color: #fff; }
+.btn.is-blue:hover { background-color: #3dbedf; }
+
+.btn.is-dkRed { background-color: #e1453d; color: #fff; }
+.btn.is-dkRed:hover { background-color: #dd3027; }
+
+.btn.is-dkBlue { background-color: #6E91E0; color: #fff; }
+.btn.is-dkBlue:hover { background-color: #5981dc; }
+
+.btn.is-greyBlue { background-color: #818da7; color: #fff; }
+.btn.is-greyBlue:hover { background-color: #727f9d; }
