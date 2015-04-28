@@ -501,10 +501,12 @@ root.Core = new function(){
 
 		// If the game is active, update the game status bar with score, duration and FPS
 		if( playing ) {
-			scoreText = 'Score: <span>' + Math.round( score ) + '</span>';
-			scoreText += ' Time: <span>' + Math.round( ( ( new Date().getTime() - time ) / 1000 ) * 100 ) / 100 + 's</span>';
-			scoreText += '<span>FPS: ' + Math.round( fps ) + ' ('+Math.round(Math.max(Math.min(fps/FRAMERATE, FRAMERATE), 0)*100)+'%)</span>';
-			// status.innerHTML = scoreText;
+			// scoreText = 'Score: <span>' + Math.round( score ) + '</span>';
+			// scoreText += ' Time: <span>' + Math.round( ( ( new Date().getTime() - time ) / 1000 ) * 100 ) / 100 + 's</span>';
+		  // scoreText += '<span>FPS: ' + Math.round( fps ) + ' ('+Math.round(Math.max(Math.min(fps/FRAMERATE, FRAMERATE), 0)*100)+'%)</span>';
+			//status.innerHTML = scoreText;
+
+      $('.score').text(Math.round(score));
 
 			if( player.energy === 0 ) {
 				emitParticles( player.position, { x: 0, y: 0 }, 10, 40 );

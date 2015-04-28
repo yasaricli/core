@@ -5,6 +5,8 @@ canvas { cursor: crosshair; z-index: 1; }
 #panels { width: 100%; position: absolute; z-index: 3; bottom:50px; }
 #background { border: none; z-index: 0; }
 
+.score { color:#ffdf8f; position: absolute; z-index: 5; font-weight: bold; font-size: 45px; margin:40px; }
+
 .btn { text-decoration: none; font-weight:bold; display: block; padding: 15px; cursor: pointer; text-align: center; text-decoration: none; text-transform: uppercase; outline: 0; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none }
 .btn:hover { background: #4d4d4d; color: #fff }
 .btn.is-large { font-size: 25px; margin:auto; width:75%; }
@@ -24,8 +26,8 @@ canvas { cursor: crosshair; z-index: 1; }
 .btn.is-black { background-color: #3a3a3a; color: #fff; }
 .btn.is-black:hover { background-color: #2d2d2d; }
 
-.btn.is-blue { background-color: #53C5E3; color: #fff; }
-.btn.is-blue:hover { background-color: #3dbedf; }
+.btn.is-blue { background-color: #249d93; color: #fff; }
+.btn.is-blue:hover { background-color: #1f8980; }
 
 .btn.is-dkRed { background-color: #e1453d; color: #fff; }
 .btn.is-dkRed:hover { background-color: #dd3027; }
