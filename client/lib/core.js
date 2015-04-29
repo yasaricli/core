@@ -10,11 +10,9 @@ root.Core = new function(){
 		height: window.innerHeight
 	};
 
-	var canvas,
-		context;
-
-	var canvasBackground,
-		contextBackground;
+	var canvas, context,
+      canvasBackground,
+      contextBackground;
 
 	// UI DOM elements
 	var status;
@@ -55,6 +53,16 @@ root.Core = new function(){
 	var fpsMax = 0;
 	var timeLastSecond = new Date().getTime();
 	var frames = 0;
+
+  this.resume = function() {
+    playing = true;
+    MeteorSounds.loop('bg');
+  };
+
+  this.pause = function() {
+    playing = false;
+    MeteorSounds.stop('bg');
+  };
 
 	this.init = function(){
 
@@ -128,7 +136,7 @@ root.Core = new function(){
 			time = new Date().getTime();
 
       // background music play
-      MeteorSounds.play('bg');
+      MeteorSounds.loop('bg');
 		}
 	};
 
@@ -271,14 +279,12 @@ root.Core = new function(){
 	 */
 	function emitParticles( position, direction, spread, seed ) {
 		var q = seed + ( Math.random() * seed );
-
 		while( --q >= 0 ) {
 			var p = new Point();
 			p.position.x = position.x + ( Math.sin(q) * spread );
 			p.position.y = position.y + ( Math.cos(q) * spread );
 			p.velocity = { x: direction.x + ( -1 + Math.random() * 2 ), y: direction.y + ( - 1 + Math.random() * 2 ) };
 			p.alpha = 1;
-
 			particles.push( p );
 		}
 	}
@@ -388,136 +394,125 @@ root.Core = new function(){
 			context.closePath();
 			context.fill();
 			context.stroke();
-		}
 
-		if( spaceIsDown && player.energy > 10 ) {
-			player.energy -= 0.1;
+		  if( spaceIsDown && player.energy > 10 ) {
+		  	player.energy -= 0.1;
+		  	context.beginPath();
+		  	context.fillStyle = 'rgba( 0, 100, 100, ' + ( player.energy / 100 ) * 0.9 + ' )';
+		  	context.arc( player.position.x, player.position.y, player.radius, 0, Math.PI*2, true );
+		  	context.fill();
+		  }
 
-			context.beginPath();
-			context.fillStyle = 'rgba( 0, 100, 100, ' + ( player.energy / 100 ) * 0.9 + ' )';
-			context.arc( player.position.x, player.position.y, player.radius, 0, Math.PI*2, true );
-			context.fill();
-		}
+		  var enemyCount = 0;
+		  var energyCount = 0;
 
-		var enemyCount = 0;
-		var energyCount = 0;
+		  // Go through each enemy and draw it + update its properties
+		  for( i = 0; i < organisms.length; i++ ) {
+		  	p = organisms[i];
 
-		// Go through each enemy and draw it + update its properties
-		for( i = 0; i < organisms.length; i++ ) {
-			p = organisms[i];
+		  	p.position.x += p.velocity.x;
+		  	p.position.y += p.velocity.y;
 
-			p.position.x += p.velocity.x;
-			p.position.y += p.velocity.y;
+		  	p.alpha += ( 1 - p.alpha ) * 0.1;
 
-			p.alpha += ( 1 - p.alpha ) * 0.1;
+		  	if( p.type == ORGANISM_ENEMY ) context.fillStyle = '#e1453d';
+		  	if( p.type == ORGANISM_ENERGY ) context.fillStyle = '#3be2d4';
 
-			if( p.type == ORGANISM_ENEMY ) context.fillStyle = '#e1453d';
-			if( p.type == ORGANISM_ENERGY ) context.fillStyle = '#3be2d4';
+		  	context.beginPath();
+		  	context.arc(p.position.x, p.position.y, p.size/2, 0, Math.PI*2, true);
+		  	context.fill();
 
-			context.beginPath();
-			context.arc(p.position.x, p.position.y, p.size/2, 0, Math.PI*2, true);
-			context.fill();
+		  	var angle = Math.atan2( p.position.y - player.position.y, p.position.x - player.position.x );
 
-			var angle = Math.atan2( p.position.y - player.position.y, p.position.x - player.position.x );
+		  	if (playing) {
 
-			if (playing) {
+		  		var dist = Math.abs( angle - player.angle );
 
-				var dist = Math.abs( angle - player.angle );
+		  		if( dist > Math.PI ) {
+		  			dist = ( Math.PI * 2 ) - dist;
+		  		}
 
-				if( dist > Math.PI ) {
-					dist = ( Math.PI * 2 ) - dist;
-				}
+		  		if ( dist < 1.6 ) {
+		  			if (p.distanceTo(player.position) > player.radius - 5 && p.distanceTo(player.position) < player.radius + 5) {
+		  				p.dead = true;
+		  			}
+		  		}
 
-				if ( dist < 1.6 ) {
-					if (p.distanceTo(player.position) > player.radius - 5 && p.distanceTo(player.position) < player.radius + 5) {
-						p.dead = true;
-					}
-				}
+		  		if (spaceIsDown && p.distanceTo(player.position) < player.radius && player.energy > 11) {
+		  			p.dead = true;
+		  			score += 4;
+            console.log('dead2');
+		  		}
 
-				if (spaceIsDown && p.distanceTo(player.position) < player.radius && player.energy > 11) {
-					p.dead = true;
-					score += 4;
-          console.log('dead2');
-				}
+		  		if (p.distanceTo(player.position) < player.energyRadius + (p.size * 0.5)) {
+		  			if (p.type == ORGANISM_ENEMY) {
+              MeteorSounds.play('enemy');
+		  				player.energy -= 6;
+		  			}
 
-				if (p.distanceTo(player.position) < player.energyRadius + (p.size * 0.5)) {
-					if (p.type == ORGANISM_ENEMY) {
-            MeteorSounds.play('enemy');
-						player.energy -= 6;
-					}
+		  			if (p.type == ORGANISM_ENERGY) {
+              MeteorSounds.play('energy');
+		  				player.energy += 8;
+		  				score += 30;
+		  			}
 
-					if (p.type == ORGANISM_ENERGY) {
-            MeteorSounds.play('energy');
-						player.energy += 8;
-						score += 30;
-					}
+		  			player.energy = Math.max(Math.min(player.energy, 100), 0);
+		  			p.dead = true;
+		  		}
+		  	}
 
-					player.energy = Math.max(Math.min(player.energy, 100), 0);
-					p.dead = true;
-				}
-			}
+		  	// If the enemy is outside of the game bounds, destroy it
+		  	if( p.position.x < -p.size || p.position.x > world.width + p.size || p.position.y < -p.size || p.position.y > world.height + p.size ) {
+		  		p.dead = true;
+		  	}
 
-			// If the enemy is outside of the game bounds, destroy it
-			if( p.position.x < -p.size || p.position.x > world.width + p.size || p.position.y < -p.size || p.position.y > world.height + p.size ) {
-				p.dead = true;
-			}
+		  	// If the enemy is dead, remove it
+		  	if( p.dead ) {
+		  		emitParticles( p.position, { x: (p.position.x - player.position.x) * 0.02, y: (p.position.y - player.position.y) * 0.02 }, 5, 5 );
+		  		organisms.splice( i, 1 );
+		  		i --;
+		  	}
+		  	else {
+		  		if( p.type == ORGANISM_ENEMY ) enemyCount ++;
+		  		if( p.type == ORGANISM_ENERGY ) energyCount ++;
+		  	}
+		  }
 
-			// If the enemy is dead, remove it
-			if( p.dead ) {
-				emitParticles( p.position, { x: (p.position.x - player.position.x) * 0.02, y: (p.position.y - player.position.y) * 0.02 }, 5, 5 );
-				organisms.splice( i, 1 );
-				i --;
-			}
-			else {
-				if( p.type == ORGANISM_ENEMY ) enemyCount ++;
-				if( p.type == ORGANISM_ENERGY ) energyCount ++;
-			}
-		}
+		  // If there are less enemies than intended for this difficulty, add another one
+		  if( enemyCount < 1 * difficulty && new Date().getTime() - lastspawn > 100 ) {
+		  	organisms.push( giveLife( new Enemy() ) );
+		  	lastspawn = new Date().getTime();
+		  }
 
-		// If there are less enemies than intended for this difficulty, add another one
-		if( enemyCount < 1 * difficulty && new Date().getTime() - lastspawn > 100 ) {
-			organisms.push( giveLife( new Enemy() ) );
-			lastspawn = new Date().getTime();
-		}
+		  //
+		  if( energyCount < 1 && Math.random() > 0.996 ) {
+		  	organisms.push( giveLife( new Energy() ) );
+		  }
 
-		//
-		if( energyCount < 1 && Math.random() > 0.996 ) {
-			organisms.push( giveLife( new Energy() ) );
-		}
+		  // Go through and draw all particle effects
+		  for( i = 0; i < particles.length; i++ ) {
+		  	p = particles[i];
 
-		// Go through and draw all particle effects
-		for( i = 0; i < particles.length; i++ ) {
-			p = particles[i];
+		  	// Apply velocity to the particle
+		  	p.position.x += p.velocity.x;
+		  	p.position.y += p.velocity.y;
 
-			// Apply velocity to the particle
-			p.position.x += p.velocity.x;
-			p.position.y += p.velocity.y;
+		  	// Fade out
+		  	p.alpha -= 0.02;
 
-			// Fade out
-			p.alpha -= 0.02;
+		  	// Draw the particle
+		  	context.fillStyle = 'rgba(255,255,255,'+Math.max(p.alpha,0)+')';
+		  	context.fillRect( p.position.x, p.position.y, 1, 1 );
 
-			// Draw the particle
-			context.fillStyle = 'rgba(255,255,255,'+Math.max(p.alpha,0)+')';
-			context.fillRect( p.position.x, p.position.y, 1, 1 );
-
-			// If the particle is faded out to less than zero, remove it
-			if( p.alpha <= 0 ) {
-				particles.splice( i, 1 );
-			}
-		}
-
-		// If the game is active, update the game status bar with score, duration and FPS
-		if( playing ) {
-			// scoreText = 'Score: <span>' + Math.round( score ) + '</span>';
-			// scoreText += ' Time: <span>' + Math.round( ( ( new Date().getTime() - time ) / 1000 ) * 100 ) / 100 + 's</span>';
-		  // scoreText += '<span>FPS: ' + Math.round( fps ) + ' ('+Math.round(Math.max(Math.min(fps/FRAMERATE, FRAMERATE), 0)*100)+'%)</span>';
-			//status.innerHTML = scoreText;
+		  	// If the particle is faded out to less than zero, remove it
+		  	if( p.alpha <= 0 ) {
+		  		particles.splice( i, 1 );
+		  	}
+		  }
 
       $('.score').text(Math.round(score));
-
 			if( player.energy === 0 ) {
 				emitParticles( player.position, { x: 0, y: 0 }, 10, 40 );
-
 				gameOver();
 			}
 		}
