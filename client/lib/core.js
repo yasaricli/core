@@ -123,11 +123,14 @@ root.Core = new function(){
 
 			// Hide the game UI
 			panels.style.display = 'none';
-			status.style.display = 'block';
+			// status.style.display = 'block';
 
 			time = new Date().getTime();
+
+      // background music play
+      MeteorSounds.play('bg');
 		}
-	}
+	};
 
 	/**
 	 * Stops the currently ongoing game and shows the
@@ -151,7 +154,9 @@ root.Core = new function(){
 		// Update the status bar with the final score and time
 		scoreText = 'Score: <span>' + Math.round( score ) + '</span>';
 		scoreText += ' Time: <span>' + Math.round( ( ( new Date().getTime() - time ) / 1000 ) * 100 ) / 100 + 's</span>';
-		// status.innerHTML = scoreText;
+
+    // background music play
+    MeteorSounds.stop('bg');
 	}
 
 	function documentKeyDownHandler(event) {
@@ -432,20 +437,22 @@ root.Core = new function(){
 				if (spaceIsDown && p.distanceTo(player.position) < player.radius && player.energy > 11) {
 					p.dead = true;
 					score += 4;
+          console.log('dead2');
 				}
 
 				if (p.distanceTo(player.position) < player.energyRadius + (p.size * 0.5)) {
 					if (p.type == ORGANISM_ENEMY) {
+            MeteorSounds.play('enemy');
 						player.energy -= 6;
 					}
 
 					if (p.type == ORGANISM_ENERGY) {
+            MeteorSounds.play('energy');
 						player.energy += 8;
 						score += 30;
 					}
 
 					player.energy = Math.max(Math.min(player.energy, 100), 0);
-
 					p.dead = true;
 				}
 			}
@@ -640,3 +647,6 @@ window.requestAnimFrame = (function(){
             window.setTimeout(callback, 1000 / 60);
           };
 })();
+
+
+

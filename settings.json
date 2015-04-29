@@ -1,0 +1,13 @@
+{
+  "public": {
+    "sounds": {
+      "soundFx": {
+        "energy": "application/sounds/energy.mp3",
+        "enemy": "application/sounds/enemy.mp3"
+      },
+      "soundAudio": {
+        "bg": "application/sounds/bg.wav"
+      }
+    }
+  }
+}
