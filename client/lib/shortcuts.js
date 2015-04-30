@@ -1,5 +1,11 @@
 var root = this;
 
+root.HELPERS = {
+  isAuthenticated: function() {
+    return Meteor.userId();
+  }
+};
+
 root.isCordova = function(callback) {
   return Meteor.isCordova && callback();
 };
@@ -22,3 +28,8 @@ root.renderBackground = function(elem) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 };
+
+// TEMPLATE TAGS
+_.each(HELPERS, function(fn, name) {
+  Template.registerHelper(name, fn);
+});

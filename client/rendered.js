@@ -1,5 +1,5 @@
 Template.background.onRendered(function() {
-  var elem = this.$('#background').get(0);
+  var elem = this.$('#Background').get(0);
 
   // init
   renderBackground(elem);

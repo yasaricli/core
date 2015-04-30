@@ -10,3 +10,7 @@ Router.route('/', {
 Router.route('/scores', {
   name: 'Scores'
 });
+
+Router.route('/profile/:_id', {
+  name: 'Profile'
+});

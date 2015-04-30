@@ -1,29 +1,47 @@
 <head>
-  <title>core</title>
+  <title>Core game</title>
   <meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 
 <template name="layout">
   <div id="Surface">
-    {{ > yield }}
+    <div class="container">
+      {{ > yield }}
+    </div>
     {{ > background }}
   </div>
 </template>
 
 <template name="background">
-  <canvas id="background"></canvas>
+  <canvas id="Background"></canvas>
 </template>
 
 <template name="game">
   <span class="score">{{ score }}</span>
   <div id="panels">
-    <a href="#" id="LoginWithFacebook" class="btn is-facebook is-large">Login Facebook</a>
-    <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
+    {{ > loginWithFacebook }}
+    {{# if isAuthenticated }}
+      <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
+    {{/if}}
     <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
   </div>
   <canvas id="Game"></canvas>
 </template>
 
+<template name="profile">
+  profile
+</template>
+
 <template name="scores">
   scores
+</template>
+
+<template name="loginWithFacebook">
+  <a href="{{ pathFor route='Profile' }}" class="btn is-facebook is-large {{# if isAuthenticated}}user{{/if}}">
+    {{# if isAuthenticated }}
+      {{ currentUser.profile.name }}
+    {{ else }}
+      Login Facebook
+    {{/if}}
+  </a>
 </template>

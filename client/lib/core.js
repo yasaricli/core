@@ -497,7 +497,7 @@ root.Core = new function(){
 			}
 		}
 
-		requestAnimFrame( animate );
+		root.requestAnimationFrame(animate);
 	}
 
 	/**
@@ -610,18 +610,3 @@ function Energy() {
 }
 
 Energy.prototype = new Point();
-
-// shim with setTimeout fallback from http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          window.oRequestAnimationFrame      ||
-          window.msRequestAnimationFrame     ||
-          function(/* function */ callback, /* DOMElement */ element){
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
-
-
-

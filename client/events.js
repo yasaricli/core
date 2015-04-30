@@ -1,5 +1,5 @@
-Template.game.events({
-  'click #LoginWithFacebook': function(e) {
+Template.loginWithFacebook.events({
+  'click .is-facebook:not(.user)': function(e) {
     e.preventDefault();
 
     // LOGIN FACEBOOK
