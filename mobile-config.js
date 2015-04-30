@@ -24,3 +24,7 @@ App.launchScreens({
   'android_xhdpi_portrait': 'resources/splash/splash-720x1280.png',
   'android_xhdpi_landscape': 'resources/splash/splash-1280x720.png'
 });
+
+
+App.setPreference("SplashScreen", "screen");
+App.setPreference("SplashScreenDelay", "10000");

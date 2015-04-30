@@ -10,15 +10,13 @@ root.Core = new function(){
 		height: window.innerHeight
 	};
 
-	var canvas, context,
-      canvasBackground,
-      contextBackground;
+	var canvas, context;
 
 	// UI DOM elements
 	var status;
 	var panels;
 	var title;
-	var startButton;
+	var StartGame;
 
 	// Game elements
 	var organisms = [];
@@ -65,18 +63,14 @@ root.Core = new function(){
   };
 
 	this.init = function(){
-
-		canvas = document.getElementById('world');
-		canvasBackground = document.getElementById('background');
+		canvas = document.getElementById('Game');
 		panels = document.getElementById('panels');
 		status = document.getElementById('status');
 		title = document.getElementById('title');
-		startButton = document.getElementById('startButton');
+		StartGame = document.getElementById('StartGame');
 
-		if (canvas && canvas.getContext) {
+		if (canvas  && canvas.getContext) {
 			context = canvas.getContext('2d');
-
-			contextBackground = canvasBackground.getContext('2d');
 
 			// Register event listeners
 			document.addEventListener('mousemove', documentMouseMoveHandler, false);
@@ -86,7 +80,7 @@ root.Core = new function(){
 			document.addEventListener('touchmove', documentTouchMoveHandler, false);
 			document.addEventListener('touchend', documentTouchEndHandler, false);
 			window.addEventListener('resize', windowResizeHandler, false);
-			startButton.addEventListener('click', startButtonClickHandler, false);
+			StartGame.addEventListener('click', StartGameClickHandler, false);
 			document.addEventListener('keydown', documentKeyDownHandler, false);
 			document.addEventListener('keyup', documentKeyUpHandler, false);
 
@@ -99,19 +93,10 @@ root.Core = new function(){
 		}
 	};
 
-	function renderBackground() {
-		var gradient = contextBackground.createRadialGradient( world.width * 0.5, world.height * 0.5, 0, world.width * 0.5, world.height * 0.5, 500 );
-		gradient.addColorStop(0,'rgba(0, 70, 70, 1)');
-		gradient.addColorStop(1,'rgba(0, 8, 14, 1)');
-
-		contextBackground.fillStyle = gradient;
-		contextBackground.fillRect( 0, 0, world.width, world.height );
-	}
-
 	/**
 	 * Handles click on the start button in the UI.
 	 */
-	function startButtonClickHandler(event){
+	function StartGameClickHandler(event){
 		if( playing == false ) {
 			playing = true;
 
@@ -254,8 +239,6 @@ root.Core = new function(){
 		// Resize the canvas
 		canvas.width = world.width;
 		canvas.height = world.height;
-		canvasBackground.width = world.width;
-		canvasBackground.height = world.height;
 
 		// Determine the x/y position of the canvas
 		var cvx = (window.innerWidth - world.width) * 0.5;
@@ -265,9 +248,6 @@ root.Core = new function(){
 		canvas.style.position = 'absolute';
 		canvas.style.left = cvx + 'px';
 		canvas.style.top = cvy + 'px';
-		canvasBackground.style.position = 'absolute';
-
-		renderBackground();
 	}
 
 	/**

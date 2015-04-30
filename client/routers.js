@@ -4,5 +4,9 @@ Router.configure({
 });
 
 Router.route('/', {
-  name: 'Index'
+  name: 'Game'
+});
+
+Router.route('/scores', {
+  name: 'Scores'
 });

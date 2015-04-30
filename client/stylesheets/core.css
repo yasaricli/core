@@ -2,17 +2,20 @@ body { padding:0px; margin:0px; font-family: "Whitney A","Whitney B"; font-style
 
 canvas { cursor: crosshair; z-index: 1; }
 
-#panels { width: 100%; position: absolute; z-index: 3; bottom:50px; }
+#panels { width: 100%; position: absolute; z-index: 3; top: 30%; }
 #background { border: none; z-index: 0; }
 
 .score { color:#ffdf8f; position: absolute; z-index: 5; font-weight: bold; font-size: 45px; margin:40px; }
 
 .btn { text-decoration: none; font-weight:bold; display: block; padding: 15px; cursor: pointer; text-align: center; text-decoration: none; text-transform: uppercase; outline: 0; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none }
 .btn:hover { background: #4d4d4d; color: #fff }
-.btn.is-large { font-size: 25px; margin:auto; width:75%; }
+.btn.is-large { font-size: 25px; margin:auto; width:75%; margin-bottom:25px; }
 
 .btn.is-purple { background-color: #8c88cd; color: #fff; }
 .btn.is-purple:hover { background-color: #7a76c6; }
+
+.btn.is-facebook { background-color: #2f477a; color: #fff; }
+.btn.is-facebook:hover { background-color: #2C416C; }
 
 .btn.is-red { background-color: #e86f69; color: #fff; }
 .btn.is-red:hover { background-color: #e45a53; }

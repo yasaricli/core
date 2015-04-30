@@ -1,4 +1,11 @@
 {
+  "cordova": {
+    "com.phonegap.plugins.facebookconnect": {
+      "APP_NAME": "Core",
+      "APP_ID": "----",
+      "secret": "----"
+    }
+  },
   "public": {
     "sounds": {
       "soundFx": {
@@ -8,6 +15,20 @@
       "soundAudio": {
         "bg": "application/sounds/bg.wav"
       }
+    },
+    "facebook": {
+      "permissions": [
+        "public_profile",
+        "user_interests",
+        "user_activities",
+        "read_friendlists",
+        "user_photos"
+      ],
+      "profileFields": [
+        "name",
+        "gender",
+        "location"
+      ]
     }
   }
 }

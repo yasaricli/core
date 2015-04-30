@@ -1,0 +1,29 @@
+<head>
+  <title>core</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+</head>
+
+<template name="layout">
+  <div id="Surface">
+    {{ > yield }}
+    {{ > background }}
+  </div>
+</template>
+
+<template name="background">
+  <canvas id="background"></canvas>
+</template>
+
+<template name="game">
+  <span class="score">{{ score }}</span>
+  <div id="panels">
+    <a href="#" id="LoginWithFacebook" class="btn is-facebook is-large">Login Facebook</a>
+    <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
+    <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+  </div>
+  <canvas id="Game"></canvas>
+</template>
+
+<template name="scores">
+  scores
+</template>
