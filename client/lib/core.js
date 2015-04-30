@@ -16,7 +16,6 @@ root.Core = new function(){
 	var status;
 	var panels;
 	var title;
-	var StartGame;
 
 	// Game elements
 	var organisms = [];
@@ -67,20 +66,18 @@ root.Core = new function(){
 		panels = document.getElementById('panels');
 		status = document.getElementById('status');
 		title = document.getElementById('title');
-		StartGame = document.getElementById('StartGame');
 
-		if (canvas  && canvas.getContext) {
+		if (canvas && canvas.getContext) {
 			context = canvas.getContext('2d');
 
 			// Register event listeners
+			window.addEventListener('resize', windowResizeHandler, false);
 			document.addEventListener('mousemove', documentMouseMoveHandler, false);
 			document.addEventListener('mousedown', documentMouseDownHandler, false);
 			document.addEventListener('mouseup', documentMouseUpHandler, false);
 			canvas.addEventListener('touchstart', documentTouchStartHandler, false);
 			document.addEventListener('touchmove', documentTouchMoveHandler, false);
 			document.addEventListener('touchend', documentTouchEndHandler, false);
-			window.addEventListener('resize', windowResizeHandler, false);
-			StartGame.addEventListener('click', StartGameClickHandler, false);
 			document.addEventListener('keydown', documentKeyDownHandler, false);
 			document.addEventListener('keyup', documentKeyUpHandler, false);
 
@@ -96,7 +93,7 @@ root.Core = new function(){
 	/**
 	 * Handles click on the start button in the UI.
 	 */
-	function StartGameClickHandler(event){
+	this.StartGame = function() {
 		if( playing == false ) {
 			playing = true;
 
