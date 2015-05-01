@@ -11,11 +11,7 @@ root.Core = new function(){
 	};
 
 	var canvas, context;
-
-	// UI DOM elements
-	var status;
 	var panels;
-	var title;
 
 	// Game elements
 	var organisms = [];
@@ -29,8 +25,9 @@ root.Core = new function(){
 	var spaceIsDown = false;
 
 	// Game properties and scoring
-	var playing = false;
-	var score = 0;
+	var playing = new ReactiveVar(false);
+	    score = new ReactiveVar(0);
+
 	var time = 0;
 	var duration = 0;
 	var difficulty = 1;
@@ -52,20 +49,26 @@ root.Core = new function(){
 	var frames = 0;
 
   this.resume = function() {
-    playing = true;
+    playing.set(true);
     MeteorSounds.loop('bg');
   };
 
   this.pause = function() {
-    playing = false;
+    playing.set(false);
     MeteorSounds.stop('bg');
+  };
+
+  this.getScore = function() {
+    return Math.round(score.get());
+  };
+
+  this.getPlaying = function() {
+    return playing.get();
   };
 
 	this.init = function(){
 		canvas = document.getElementById('Game');
 		panels = document.getElementById('panels');
-		status = document.getElementById('status');
-		title = document.getElementById('title');
 
 		if (canvas && canvas.getContext) {
 			context = canvas.getContext('2d');
@@ -94,12 +97,12 @@ root.Core = new function(){
 	 * Handles click on the start button in the UI.
 	 */
 	this.StartGame = function() {
-		if( playing == false ) {
-			playing = true;
+		if(!playing.get()) {
+			playing.set(true);
 
 			// Reset game properties
 			organisms = [];
-			score = 0;
+			score.set(0);
 			difficulty = 1;
 
 			// Reset game tracking properties
@@ -113,7 +116,6 @@ root.Core = new function(){
 
 			// Hide the game UI
 			panels.style.display = 'none';
-			// status.style.display = 'block';
 
 			time = new Date().getTime();
 
@@ -127,23 +129,10 @@ root.Core = new function(){
 	 * resulting data in the UI.
 	 */
 	function gameOver() {
-		playing = false;
+		playing.set(false);
 
 		// Determine the duration of the game
 		duration = new Date().getTime() - time;
-
-		// Show the UI
-		panels.style.display = 'block';
-
-		// Ensure that the score is an integer
-		score = Math.round(score);
-
-		// Write the users score to the UI XXX:
-		console.log('Game Over! (' + score + ' points)');
-
-		// Update the status bar with the final score and time
-		scoreText = 'Score: <span>' + Math.round( score ) + '</span>';
-		scoreText += ' Time: <span>' + Math.round( ( ( new Date().getTime() - time ) / 1000 ) * 100 ) / 100 + 's</span>';
 
     // background music play
     MeteorSounds.stop('bg');
@@ -304,13 +293,13 @@ root.Core = new function(){
 			jlen;
 
 		// Only update game properties and draw the player if a game is active
-		if( playing ) {
+		if(playing.get()) {
 
 			// Increment the difficulty slightly
 			difficulty += 0.0015;
 
 			// Increment the score depending on difficulty
-			score += (0.4 * difficulty) * scoreFactor;
+			score.set( score.get() + ((0.4 * difficulty) * scoreFactor));
 
 			// Increase the game frame count stat
 			fc ++;
@@ -401,7 +390,7 @@ root.Core = new function(){
 
 		  	var angle = Math.atan2( p.position.y - player.position.y, p.position.x - player.position.x );
 
-		  	if (playing) {
+		  	if (playing.get()) {
 
 		  		var dist = Math.abs( angle - player.angle );
 
@@ -417,7 +406,7 @@ root.Core = new function(){
 
 		  		if (spaceIsDown && p.distanceTo(player.position) < player.radius && player.energy > 11) {
 		  			p.dead = true;
-		  			score += 4;
+		  			score.set(score.get() + 4);
             console.log('dead2');
 		  		}
 
@@ -430,7 +419,7 @@ root.Core = new function(){
 		  			if (p.type == ORGANISM_ENERGY) {
               MeteorSounds.play('energy');
 		  				player.energy += 8;
-		  				score += 30;
+		  				score.set(score.get() + 30);
 		  			}
 
 		  			player.energy = Math.max(Math.min(player.energy, 100), 0);
@@ -487,7 +476,6 @@ root.Core = new function(){
 		  	}
 		  }
 
-      $('.score').text(Math.round(score));
 			if( player.energy === 0 ) {
 				emitParticles( player.position, { x: 0, y: 0 }, 10, 40 );
 				gameOver();

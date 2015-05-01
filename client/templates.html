@@ -18,14 +18,17 @@
 </template>
 
 <template name="game">
-  <span class="score">{{ score }}</span>
-  <div id="panels">
-    {{ > loginWithFacebook }}
-    {{# if isAuthenticated }}
-      <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
-    {{/if}}
-    <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
-  </div>
+  {{# if playing }}
+    <span class="score">{{ score }}</span>
+  {{ else }}
+    <div id="panels">
+      {{ > loginWithFacebook }}
+      {{# if isAuthenticated }}
+        <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
+      {{/if}}
+      <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+    </div>
+  {{/if}}
   <canvas id="Game"></canvas>
 </template>
 
