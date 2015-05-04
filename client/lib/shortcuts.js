@@ -28,8 +28,3 @@ root.renderBackground = function(elem) {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 };
-
-// TEMPLATE TAGS
-_.each(HELPERS, function(fn, name) {
-  Template.registerHelper(name, fn);
-});

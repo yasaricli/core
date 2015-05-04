@@ -18,18 +18,26 @@
 </template>
 
 <template name="game">
-  {{# if playing }}
-    <span class="score">{{ score }}</span>
-  {{ else }}
-    <div id="panels">
-      {{ > loginWithFacebook }}
-      {{# if isAuthenticated }}
-        <a href="#" id="StartGame" class="btn is-blue is-large">START</a>
-      {{/if}}
-      <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
-    </div>
+  {{# if Core.getPlaying }}
+    <span class="score">{{ Core.getScore }}</span>
   {{/if}}
   <canvas id="Game"></canvas>
+</template>
+
+<template name="index">
+  {{ > loginWithFacebook }}
+  <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large">START</a>
+  <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+</template>
+
+<template name="gameOver">
+  <div class="over-score">
+    <div class="label">SCORE</div>
+    <div class="scores">{{ Core.getScore }}</div>
+    <div class="label">BEST</div>
+    <div class="scores">{{ Core.getScore }}</div>
+  </div>
+  <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large">RESTART</a>
 </template>
 
 <template name="profile">
@@ -41,7 +49,7 @@
 </template>
 
 <template name="loginWithFacebook">
-  <a href="{{ pathFor route='Profile' }}" class="btn is-facebook is-large {{# if isAuthenticated}}user{{/if}}">
+  <a href="{{ pathFor route='Profile' }}" class="mt100 btn is-facebook is-large {{# if isAuthenticated}}user{{/if}}">
     {{# if isAuthenticated }}
       {{ currentUser.profile.name }}
     {{ else }}

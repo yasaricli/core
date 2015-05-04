@@ -1,58 +1,64 @@
 var root = this;
 
+if (!_.has(root, 'MeteorSounds')) {
+  MeteorSounds = {
+    play: function() {},
+    stop: function() {},
+    loop: function() {}
+  };
+}
+
 root.Core = new function(){
+	var player, canvas, contex;
   var FRAMERATE = 60,
-	    ORGANISM_ENEMY = 'enemy',
-		  ORGANISM_ENERGY = 'energy';
+	  ORGANISM_ENEMY = 'enemy',
+		ORGANISM_ENERGY = 'energy';
 
-	var world = {
-		width: window.innerWidth,
-		height: window.innerHeight
-	};
+	  world = {
+		  width: window.innerWidth,
+		  height: window.innerHeight
+	  },
 
-	var canvas, context;
-	var panels;
+	  // Game elements
+	  organisms = [],
+	  particles = [],
 
-	// Game elements
-	var organisms = [];
-	var particles = [];
-	var player;
+	  // Mouse properties
+	  mouseX = (window.innerWidth + world.width) * 0.5,
+	  mouseY = (window.innerHeight + world.height) * 0.5,
+	  mouseIsDown = false,
+	  spaceIsDown = false,
 
-	// Mouse properties
-	var mouseX = (window.innerWidth + world.width) * 0.5;
-	var mouseY = (window.innerHeight + world.height) * 0.5;
-	var mouseIsDown = false;
-	var spaceIsDown = false;
+	  // Game properties and scoring
+	  playing = new ReactiveVar(false),
+	  score = new ReactiveVar(0),
 
-	// Game properties and scoring
-	var playing = new ReactiveVar(false);
-	    score = new ReactiveVar(0);
+	  time = new ReactiveVar(0),
+	  duration = new ReactiveVar(0),
+	  difficulty = new ReactiveVar(1),
+	  lastspawn = new ReactiveVar(0),
 
-	var time = 0;
-	var duration = 0;
-	var difficulty = 1;
-	var lastspawn = 0;
+	  // Game statistics
+    fc = 0, // Frame count
+	  fs = 0, // Frame score
+	  cs = 0, // Collision score
+	  frames = 0,
 
-	// Game statistics
-	var fc = 0; // Frame count
-	var fs = 0; // Frame score
-	var cs = 0; // Collision score
+	    // The world's velocity
+	  velocity = { x: -1.3, y: 1 },
 
-	// The world's velocity
-	var velocity = { x: -1.3, y: 1 };
-
-	// Performance (FPS) tracking
-	var fps = 0;
-	var fpsMin = 1000;
-	var fpsMax = 0;
-	var timeLastSecond = new Date().getTime();
-	var frames = 0;
+	  // Performance (FPS) tracking
+	  fps = new ReactiveVar(0),
+	  fpsMin = new ReactiveVar(1000),
+	  fpsMax = new ReactiveVar(0),
+	  timeLastSecond = new ReactiveVar(new Date().getTime());
 
   this.resume = function() {
     playing.set(true);
     MeteorSounds.loop('bg');
   };
 
+  // if index page then stop or game page then pause.
   this.pause = function() {
     playing.set(false);
     MeteorSounds.stop('bg');
@@ -67,30 +73,28 @@ root.Core = new function(){
   };
 
 	this.init = function(){
-		canvas = document.getElementById('Game');
-		panels = document.getElementById('panels');
+    canvas = document.getElementById('Game');
+		context = canvas.getContext('2d');
 
-		if (canvas && canvas.getContext) {
-			context = canvas.getContext('2d');
+    if (!player) {
+		  // Register event listeners
+		  canvas.addEventListener('touchstart', documentTouchStartHandler, false);
+		  window.addEventListener('resize', windowResizeHandler, false);
+		  document.addEventListener('mousemove', documentMouseMoveHandler, false);
+		  document.addEventListener('mousedown', documentMouseDownHandler, false);
+		  document.addEventListener('mouseup', documentMouseUpHandler, false);
+		  document.addEventListener('touchmove', documentTouchMoveHandler, false);
+		  document.addEventListener('touchend', documentTouchEndHandler, false);
+		  document.addEventListener('keydown', documentKeyDownHandler, false);
+		  document.addEventListener('keyup', documentKeyUpHandler, false);
 
-			// Register event listeners
-			window.addEventListener('resize', windowResizeHandler, false);
-			document.addEventListener('mousemove', documentMouseMoveHandler, false);
-			document.addEventListener('mousedown', documentMouseDownHandler, false);
-			document.addEventListener('mouseup', documentMouseUpHandler, false);
-			canvas.addEventListener('touchstart', documentTouchStartHandler, false);
-			document.addEventListener('touchmove', documentTouchMoveHandler, false);
-			document.addEventListener('touchend', documentTouchEndHandler, false);
-			document.addEventListener('keydown', documentKeyDownHandler, false);
-			document.addEventListener('keyup', documentKeyUpHandler, false);
+		  // Define our player
+		  player = new Player();
+		  animate();
+    }
 
-			// Define our player
-			player = new Player();
-
-			// Force an initial resize to make sure the UI is sized correctly
-			windowResizeHandler();
-			animate();
-		}
+		// Force an initial resize to make sure the UI is sized correctly
+		windowResizeHandler();
 	};
 
 	/**
@@ -103,7 +107,7 @@ root.Core = new function(){
 			// Reset game properties
 			organisms = [];
 			score.set(0);
-			difficulty = 1;
+			difficulty.set(1);
 
 			// Reset game tracking properties
 			fc = 0;
@@ -113,11 +117,7 @@ root.Core = new function(){
 
 			// Reset the player data
 			player.energy = 30;
-
-			// Hide the game UI
-			panels.style.display = 'none';
-
-			time = new Date().getTime();
+			time.set(new Date().getTime());
 
       // background music play
       MeteorSounds.loop('bg');
@@ -132,10 +132,13 @@ root.Core = new function(){
 		playing.set(false);
 
 		// Determine the duration of the game
-		duration = new Date().getTime() - time;
+		duration.set(new Date().getTime() - time.get());
 
     // background music play
     MeteorSounds.stop('bg');
+
+    // goto finish router
+    Router.go('GameOver');
 	}
 
 	function documentKeyDownHandler(event) {
@@ -268,18 +271,18 @@ root.Core = new function(){
 		frames ++;
 
 		// Check if a second has passed since the last time we updated the FPS
-		if( frameTime > timeLastSecond + 1000 ) {
+		if( frameTime > timeLastSecond.get() + 1000 ) {
 			// Establish the current, minimum and maximum FPS
-			fps = Math.min( Math.round( ( frames * 1000 ) / ( frameTime - timeLastSecond ) ), FRAMERATE );
-			fpsMin = Math.min( fpsMin, fps );
-			fpsMax = Math.max( fpsMax, fps );
+			fps.set(Math.min(Math.round( ( frames * 1000 ) / ( frameTime - timeLastSecond.get() ) ), FRAMERATE));
+			fpsMin.set(Math.min(fpsMin.get(), fps.get()));
+			fpsMax.set(Math.max(fpsMax.get(), fps.get()));
 
-			timeLastSecond = frameTime;
+			timeLastSecond.set(frameTime);
 			frames = 0;
 		}
 
 		// A factor by which the score will be scaled, depending on current FPS
-		var scoreFactor = 0.01 + ( Math.max( Math.min( fps, FRAMERATE ), 0 ) / FRAMERATE * 0.99 );
+		var scoreFactor = 0.01 + ( Math.max( Math.min( fps.get(), FRAMERATE ), 0 ) / FRAMERATE * 0.99 );
 
 		// Scales down the factor by itself
 		scoreFactor = scoreFactor * scoreFactor;
@@ -296,16 +299,16 @@ root.Core = new function(){
 		if(playing.get()) {
 
 			// Increment the difficulty slightly
-			difficulty += 0.0015;
+			difficulty.set(difficulty.get() + 0.0015);
 
 			// Increment the score depending on difficulty
-			score.set( score.get() + ((0.4 * difficulty) * scoreFactor));
+			score.set( score.get() + ((0.4 * difficulty.get()) * scoreFactor));
 
 			// Increase the game frame count stat
 			fc ++;
 
 			// Increase the score count stats
-			fs += (0.4 * difficulty) * scoreFactor;
+			fs += (0.4 * difficulty.get()) * scoreFactor;
 
 			//player.angle = Math.atan2( mouseY - player.position.y, mouseX - player.position.x );
 
@@ -338,7 +341,7 @@ root.Core = new function(){
 			player.updateCore();
 
 			var loopedNodes = player.coreNodes.concat();
-			loopedNodes.push( player.coreNodes[0] );
+			loopedNodes.push(player.coreNodes[0]);
 
 			for( var i = 0; i < loopedNodes.length; i++ ) {
 				p = loopedNodes[i];
@@ -381,8 +384,8 @@ root.Core = new function(){
 
 		  	p.alpha += ( 1 - p.alpha ) * 0.1;
 
-		  	if( p.type == ORGANISM_ENEMY ) context.fillStyle = '#e1453d';
-		  	if( p.type == ORGANISM_ENERGY ) context.fillStyle = '#3be2d4';
+        // fillStyle type
+        context.fillStyle = p.fillStyle
 
 		  	context.beginPath();
 		  	context.arc(p.position.x, p.position.y, p.size/2, 0, Math.PI*2, true);
@@ -445,9 +448,9 @@ root.Core = new function(){
 		  }
 
 		  // If there are less enemies than intended for this difficulty, add another one
-		  if( enemyCount < 1 * difficulty && new Date().getTime() - lastspawn > 100 ) {
+		  if( enemyCount < 1 * difficulty.get() && new Date().getTime() - lastspawn.get() > 100 ) {
 		  	organisms.push( giveLife( new Enemy() ) );
-		  	lastspawn = new Date().getTime();
+		  	lastspawn.set(new Date().getTime());
 		  }
 
 		  //
@@ -476,7 +479,7 @@ root.Core = new function(){
 		  	}
 		  }
 
-			if( player.energy === 0 ) {
+			if(!player.energy) {
 				emitParticles( player.position, { x: 0, y: 0 }, 10, 40 );
 				gameOver();
 			}
@@ -488,10 +491,10 @@ root.Core = new function(){
 	/**
 	 *
 	 */
-	function giveLife( organism ) {
-		var side = Math.round( Math.random() * 3 );
+	function giveLife(organism) {
+		var side = Math.round(Math.random() * 3);
 
-		switch( side ) {
+		switch(side) {
 			case 0:
 				organism.position.x = 10;
 				organism.position.y = world.height * Math.random();
@@ -512,8 +515,8 @@ root.Core = new function(){
 
 		organism.speed = Math.min( Math.max( Math.random(), 0.6 ), 0.75 );
 
-		organism.velocity.x = ( player.position.x - organism.position.x ) * 0.006 * organism.speed;
-		organism.velocity.y = ( player.position.y - organism.position.y ) * 0.006 * organism.speed;
+		organism.velocity.x = (player.position.x - organism.position.x) * 0.006 * organism.speed;
+		organism.velocity.y = (player.position.y - organism.position.y) * 0.006 * organism.speed;
 
 		if( organism.type == 'enemy' ) {
 			organism.velocity.x *= (1+(Math.random()*0.1));
@@ -531,8 +534,8 @@ function Point(x, y) {
 }
 
 Point.prototype.distanceTo = function(p) {
-	var dx = p.x-this.position.x;
-	var dy = p.y-this.position.y;
+	var dx = p.x-this.position.x,
+      dy = p.y-this.position.y;
 	return Math.sqrt(dx*dx + dy*dy);
 };
 
@@ -583,6 +586,7 @@ function Enemy() {
 	this.size = 6 + ( Math.random() * 4 );
 	this.speed = 1;
 	this.type = 'enemy';
+  this.fillStyle = '#e1453d';
 }
 Enemy.prototype = new Point();
 
@@ -592,6 +596,7 @@ function Energy() {
 	this.size = 10 + (Math.random()*6);
 	this.speed = 1;
 	this.type = 'energy';
+  this.fillStyle = '#3be2d4';
 }
 
 Energy.prototype = new Point();

@@ -4,7 +4,15 @@ Router.configure({
 });
 
 Router.route('/', {
+  name: 'Index'
+});
+
+Router.route('/game', {
   name: 'Game'
+});
+
+Router.route('/gameover', {
+  name: 'GameOver'
 });
 
 Router.route('/scores', {

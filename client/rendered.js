@@ -9,6 +9,11 @@ Template.background.onRendered(function() {
   });
 });
 
+Template.index.onRendered(function() {
+  Core.pause();
+});
+
 Template.game.onRendered(function() {
   Core.init();
+  Core.StartGame();
 });
