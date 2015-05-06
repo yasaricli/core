@@ -19,6 +19,8 @@ canvas#Game { z-index: 1; }
 .over-score .label { color:#e86f69; margin-top:25px; }
 .over-score .scores { color:#ffdf8f; font-size:70px; }
 
+.fa-pause, .fa-play { position:absolute; right:0px; top:0px; margin:25px; color:#e86f69; cursor:pointer; z-index:5; font-size:40px; }
+.fa-play { color:#249d93; }
 /*
  * BUTTONS UI
  * */

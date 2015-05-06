@@ -21,6 +21,7 @@
   {{# if Core.getPlaying }}
     <span class="score">{{ Core.getScore }}</span>
   {{/if}}
+  <i class="fa fa-{{# if Core.getPlaying }}pause{{ else }}play{{/if}}"></i>
   <canvas id="Game"></canvas>
 </template>
 
