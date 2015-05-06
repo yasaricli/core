@@ -534,7 +534,7 @@ root.Core = new function() {
 		organism.velocity.x = (player.position.x - organism.position.x) * 0.006 * organism.speed;
 		organism.velocity.y = (player.position.y - organism.position.y) * 0.006 * organism.speed;
 
-		if(organism.type == 'enemy') {
+		if(self.isEnemy(organism.type)) {
 			organism.velocity.x *= (1+(Math.random()*0.1));
 			organism.velocity.y *= (1+(Math.random()*0.1));
 		}
