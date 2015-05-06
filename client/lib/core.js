@@ -8,16 +8,22 @@ if (!_.has(root, 'MeteorSounds')) {
   };
 }
 
-root.Core = new function(){
+root.vibrate = function(v) {
+  if (_.has(navigator, 'notification')) {
+    return navigator.notification.vibrate(v || 100);
+  }
+};
+
+root.Core = new function() {
+  var self = this;
+
 	var player, canvas, contex;
   var FRAMERATE = 60,
-	  ORGANISM_ENEMY = 'enemy',
-		ORGANISM_ENERGY = 'energy';
 
-	  world = {
-		  width: window.innerWidth,
-		  height: window.innerHeight
-	  },
+	    world = {
+		    width: window.innerWidth,
+		    height: window.innerHeight
+	    },
 
 	  // Game elements
 	  organisms = [],
@@ -52,6 +58,14 @@ root.Core = new function(){
 	  fpsMin = new ReactiveVar(1000),
 	  fpsMax = new ReactiveVar(0),
 	  timeLastSecond = new ReactiveVar(new Date().getTime());
+
+  this.isEnemy = function(type) {
+    return type == 'enemy';
+  };
+
+  this.isEnergy = function(type) {
+    return type == 'energy';
+  };
 
   this.resume = function() {
     playing.set(true);
@@ -139,12 +153,15 @@ root.Core = new function(){
 
     // goto finish router
     Router.go('GameOver');
+
+    // game over vibrate
+    vibrate(750);
 	}
 
 	function documentKeyDownHandler(event) {
-		switch( event.keyCode ) {
+		switch(event.keyCode) {
 			case 32:
-				if( !spaceIsDown && player.energy > 15 ) {
+				if(!spaceIsDown && player.energy > 15) {
 					player.energy -= 4;
 				}
 				spaceIsDown = true;
@@ -392,9 +409,7 @@ root.Core = new function(){
 		  	context.fill();
 
 		  	var angle = Math.atan2( p.position.y - player.position.y, p.position.x - player.position.x );
-
 		  	if (playing.get()) {
-
 		  		var dist = Math.abs( angle - player.angle );
 
 		  		if( dist > Math.PI ) {
@@ -409,20 +424,21 @@ root.Core = new function(){
 
 		  		if (spaceIsDown && p.distanceTo(player.position) < player.radius && player.energy > 11) {
 		  			p.dead = true;
-		  			score.set(score.get() + 4);
+		  			score.set(score.get() + 5);
             console.log('dead2');
 		  		}
 
 		  		if (p.distanceTo(player.position) < player.energyRadius + (p.size * 0.5)) {
-		  			if (p.type == ORGANISM_ENEMY) {
+		  			if (self.isEnemy(p.type)) {
+              vibrate(p.size * 60);
               MeteorSounds.play('enemy');
-		  				player.energy -= 6;
+		  				player.energy -= 5;
 		  			}
 
-		  			if (p.type == ORGANISM_ENERGY) {
+		  			if (self.isEnergy(p.type)) {
               MeteorSounds.play('energy');
-		  				player.energy += 8;
-		  				score.set(score.get() + 30);
+		  				player.energy += 10;
+		  				score.set(score.get() + 50);
 		  			}
 
 		  			player.energy = Math.max(Math.min(player.energy, 100), 0);
@@ -442,8 +458,8 @@ root.Core = new function(){
 		  		i --;
 		  	}
 		  	else {
-		  		if( p.type == ORGANISM_ENEMY ) enemyCount ++;
-		  		if( p.type == ORGANISM_ENERGY ) energyCount ++;
+		  		if(self.isEnemy(p.type)) enemyCount ++;
+		  		if(self.isEnergy(p.type)) energyCount ++;
 		  	}
 		  }
 
@@ -513,12 +529,12 @@ root.Core = new function(){
 				break;
 		}
 
-		organism.speed = Math.min( Math.max( Math.random(), 0.6 ), 0.75 );
+		organism.speed = Math.min(Math.max( Math.random(), 0.6 ), 0.75);
 
 		organism.velocity.x = (player.position.x - organism.position.x) * 0.006 * organism.speed;
 		organism.velocity.y = (player.position.y - organism.position.y) * 0.006 * organism.speed;
 
-		if( organism.type == 'enemy' ) {
+		if(organism.type == 'enemy') {
 			organism.velocity.x *= (1+(Math.random()*0.1));
 			organism.velocity.y *= (1+(Math.random()*0.1));
 		}
@@ -526,7 +542,6 @@ root.Core = new function(){
 		organism.alpha = 0;
 		return organism;
 	}
-
 };
 
 function Point(x, y) {
@@ -574,7 +589,6 @@ Player.prototype.updateCore = function() {
 
 		n.normal.x = Math.cos(angle) * this.energyRadius;
 		n.normal.y = Math.sin(angle) * this.energyRadius;
-
 		n.offset.x = Math.random() * 5;
 		n.offset.y = Math.random() * 5;
 	}

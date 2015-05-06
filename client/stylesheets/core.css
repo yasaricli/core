@@ -12,7 +12,7 @@ body { padding:0px; margin:0px; font-family: "Whitney A","Whitney B"; font-style
 /*
  * CANVAS UI
  * */
-canvas { border: none; }
+canvas { position:absolute; border: none; }
 canvas#Background { z-index: 0; }
 canvas#Game { z-index: 1; }
 
