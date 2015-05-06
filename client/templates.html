@@ -34,8 +34,10 @@
   <div class="over-score">
     <div class="label">SCORE</div>
     <div class="scores">{{ Core.getScore }}</div>
-    <div class="label">BEST</div>
-    <div class="scores">{{ Core.getScore }}</div>
+    {{# if isAuthenticated }}
+      <div class="label">BEST</div>
+      <div class="scores">{{ Core.getScore }}</div>
+    {{/if}}
   </div>
   <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large">RESTART</a>
   <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
