@@ -1,8 +1,8 @@
 Template.game.events({
-  'click .fa-pause': function() {
+  'click .pause': function() {
     Core.pause();
   },
-  'click .fa-play': function() {
+  'click .resume': function() {
     Core.resume();
   }
 });

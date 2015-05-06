@@ -20,8 +20,17 @@
 <template name="game">
   {{# if Core.getPlaying }}
     <span class="score">{{ Core.getScore }}</span>
+    <i class="fa fa-pause pause"></i>
+  {{ else }}
+    <div class="content">
+      <div class="over-score">
+        <div class="label">SCORE</div>
+        <div class="scores">{{ Core.getScore }}</div>
+      </div>
+      <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large resume">RESUME</a>
+      <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
+    </div>
   {{/if}}
-  <i class="fa fa-{{# if Core.getPlaying }}pause{{ else }}play{{/if}}"></i>
   <canvas id="Game"></canvas>
 </template>
 

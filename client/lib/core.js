@@ -430,7 +430,7 @@ root.Core = new function() {
 
 		  		if (p.distanceTo(player.position) < player.energyRadius + (p.size * 0.5)) {
 		  			if (self.isEnemy(p.type)) {
-              vibrate(p.size * 60);
+              vibrate(p.size);
               MeteorSounds.play('enemy');
 		  				player.energy -= 5;
 		  			}
