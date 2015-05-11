@@ -36,11 +36,11 @@
 
 <template name="index">
   {{ > loginWithFacebook }}
-  <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large">START</a>
+  <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
   <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
 </template>
 
-<template name="gameOver">
+<template name="finish">
   <div class="over-score">
     <div class="label">SCORE</div>
     <div class="scores">{{ Core.getScore }}</div>
@@ -69,4 +69,8 @@
       Login Facebook
     {{/if}}
   </a>
+</template>
+
+<template name="loading">
+  loading..
 </template>

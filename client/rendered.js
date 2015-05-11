@@ -14,6 +14,11 @@ Template.index.onRendered(function() {
 });
 
 Template.game.onRendered(function() {
-  Core.init();
-  Core.StartGame();
+  Core.init().start();
+});
+
+Template.game.onDestroyed(function() {
+  if (Core.getPlaying()) {
+    Core.finish();
+  }
 });

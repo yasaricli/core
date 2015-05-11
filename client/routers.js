@@ -11,12 +11,15 @@ Router.route('/game', {
   name: 'Game'
 });
 
-Router.route('/gameover', {
-  name: 'GameOver'
+Router.route('/finish', {
+  name: 'Finish'
 });
 
 Router.route('/scores', {
-  name: 'Scores'
+  name: 'Scores',
+  waitOn: function() {
+    return Meteor.subscribe('scores');
+  }
 });
 
 Router.route('/profile/:_id', {

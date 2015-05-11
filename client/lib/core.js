@@ -15,9 +15,8 @@ root.vibrate = function(v) {
 };
 
 root.Core = new function() {
-  var self = this;
+  var self = this, player, canvas, contex;
 
-	var player, canvas, contex;
   var FRAMERATE = 60,
 
 	    world = {
@@ -109,12 +108,15 @@ root.Core = new function() {
 
 		// Force an initial resize to make sure the UI is sized correctly
 		windowResizeHandler();
+
+    // return self prototype.
+    return this;
 	};
 
 	/**
 	 * Handles click on the start button in the UI.
 	 */
-	this.StartGame = function() {
+	this.start = function() {
 		if(!playing.get()) {
 			playing.set(true);
 
@@ -142,21 +144,30 @@ root.Core = new function() {
 	 * Stops the currently ongoing game and shows the
 	 * resulting data in the UI.
 	 */
-	function gameOver() {
-		playing.set(false);
+  this.finish = function() {
 
-		// Determine the duration of the game
-		duration.set(new Date().getTime() - time.get());
+    /*
+     * Even if the user is trying to log on.
+     * If the user is logged record score.
+     * */
+    Scores.insert({ score: this.getScore() }, function(err) {
 
-    // background music play
-    MeteorSounds.stop('bg');
+      // Say to stop the game.
+		  playing.set(false);
 
-    // goto finish router
-    Router.go('GameOver');
+		  // Determine the duration of the game
+		  duration.set(new Date().getTime() - time.get());
 
-    // game over vibrate
-    vibrate(750);
-	}
+      // background music play
+      MeteorSounds.stop('bg');
+
+      // goto finish router
+      Router.go('Finish');
+
+      // game over vibrate
+      vibrate(750);
+    });
+	};
 
 	function documentKeyDownHandler(event) {
 		switch(event.keyCode) {
@@ -497,7 +508,7 @@ root.Core = new function() {
 
 			if(!player.energy) {
 				emitParticles( player.position, { x: 0, y: 0 }, 10, 40 );
-				gameOver();
+        self.finish();
 			}
 		}
 
