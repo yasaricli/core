@@ -146,26 +146,27 @@ root.Core = new function() {
 	 */
   this.finish = function() {
 
+    // Say to stop the game.
+		playing.set(false);
+
+		// Determine the duration of the game
+		duration.set(new Date().getTime() - time.get());
+
+    // background music play
+    MeteorSounds.stop('bg');
+
+    // goto finish router
+    Router.go('Finish');
+
+    // game over vibrate
+    vibrate(750);
+
     /*
      * Even if the user is trying to log on.
      * If the user is logged record score.
      * */
     Scores.insert({ score: this.getScore() }, function(err) {
-
-      // Say to stop the game.
-		  playing.set(false);
-
-		  // Determine the duration of the game
-		  duration.set(new Date().getTime() - time.get());
-
-      // background music play
-      MeteorSounds.stop('bg');
-
-      // goto finish router
-      Router.go('Finish');
-
-      // game over vibrate
-      vibrate(750);
+      // COMPLETED INSERT SCORE
     });
 	};
 
@@ -282,7 +283,7 @@ root.Core = new function() {
 			p.position.y = position.y + ( Math.cos(q) * spread );
 			p.velocity = { x: direction.x + ( -1 + Math.random() * 2 ), y: direction.y + ( - 1 + Math.random() * 2 ) };
 			p.alpha = 1;
-			particles.push( p );
+			particles.push(p);
 		}
 	}
 
@@ -318,10 +319,7 @@ root.Core = new function() {
 		// Clear the canvas of all old pixel data
 		context.clearRect(0,0,canvas.width,canvas.height);
 
-		var i,
-			ilen,
-			j,
-			jlen;
+		var i, j, ilen, jlen;
 
 		// Only update game properties and draw the player if a game is active
 		if(playing.get()) {
@@ -371,7 +369,7 @@ root.Core = new function() {
 			var loopedNodes = player.coreNodes.concat();
 			loopedNodes.push(player.coreNodes[0]);
 
-			for( var i = 0; i < loopedNodes.length; i++ ) {
+			for(var i = 0; i < loopedNodes.length; i++) {
 				p = loopedNodes[i];
 				p2 = loopedNodes[i+1];
 
@@ -392,7 +390,7 @@ root.Core = new function() {
 			context.fill();
 			context.stroke();
 
-		  if( spaceIsDown && player.energy > 10 ) {
+		  if(spaceIsDown && player.energy > 10) {
 		  	player.energy -= 0.1;
 		  	context.beginPath();
 		  	context.fillStyle = 'rgba( 0, 100, 100, ' + ( player.energy / 100 ) * 0.9 + ' )';
@@ -400,8 +398,8 @@ root.Core = new function() {
 		  	context.fill();
 		  }
 
-		  var enemyCount = 0;
-		  var energyCount = 0;
+		  var enemyCount = 0,
+		      energyCount = 0;
 
 		  // Go through each enemy and draw it + update its properties
 		  for( i = 0; i < organisms.length; i++ ) {
@@ -476,7 +474,7 @@ root.Core = new function() {
 
 		  // If there are less enemies than intended for this difficulty, add another one
 		  if( enemyCount < 1 * difficulty.get() && new Date().getTime() - lastspawn.get() > 100 ) {
-		  	organisms.push( giveLife( new Enemy() ) );
+		  	organisms.push(giveLife(new Enemy()));
 		  	lastspawn.set(new Date().getTime());
 		  }
 
