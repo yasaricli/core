@@ -4,7 +4,7 @@ App.info({
   author: 'Yasar icli',
   email: 'hello@yasaricli.com',
   website: 'http://coore.meteor.com',
-  version: '0.0.1'
+  version: '0.1'
 });
 
 App.icons({
