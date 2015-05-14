@@ -25,6 +25,5 @@ App.launchScreens({
   'android_xhdpi_landscape': 'resources/splash/splash-1280x720.png'
 });
 
-
-App.setPreference("SplashScreen", "screen");
-App.setPreference("SplashScreenDelay", "10000");
+App.setPreference('StatusBarOverlaysWebView', 'false');
+App.setPreference('StatusBarBackgroundColor', '#000000');

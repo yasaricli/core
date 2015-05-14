@@ -1,9 +1,9 @@
 {
   "cordova": {
     "com.phonegap.plugins.facebookconnect": {
+      "APP_ID": "",
       "APP_NAME": "Core",
-      "APP_ID": "----",
-      "secret": "----"
+      "secret": ""
     }
   },
   "public": {
