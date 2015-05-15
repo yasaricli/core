@@ -1,6 +1,6 @@
 Meteor.publishComposite('game', function() {
   return {
-    find: {
+    find: function() {
       return Scores.find({ userId: this.userId }, { sort: { score: -1 }, limit: 1 });
     }
   }
