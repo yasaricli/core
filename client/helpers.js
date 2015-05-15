@@ -7,4 +7,8 @@ _.each(HELPERS, function(fn, name) {
   Template.registerHelper(name, fn);
 });
 
-Template.loginWithFacebook.helpers({});
+Template.scores.helpers({
+  scores: function() {
+    return Scores.find({ });
+  }
+});

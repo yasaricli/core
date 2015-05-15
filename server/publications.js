@@ -1,7 +1,16 @@
 Meteor.publishComposite('scores', function(_id) {
   return {
     find: function() {
-      return Scores.find();
+      var  uniqueScores = _.uniq(Scores.find({}, { sort: { score: -1 }, limit: 2 }).fetch(), function(score) {
+        return score.userId;
+      });
+      return Scores.find({
+        _id: {
+          $in: _.map(uniqueScores, function(score) {
+            return score._id;
+          })
+        }
+      });
     },
     children: [
       {

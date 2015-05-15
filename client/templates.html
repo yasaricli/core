@@ -58,7 +58,18 @@
   profile
 </template>
 
-<template name="scores"></template>
+<template name="scores">
+  <ul id="Scores">
+    {{# each scores }}
+      <li>
+        <img src="{{ user.profile.picture }}">
+        <div class="createdAt">{{ livestamp createdAt }}</div>
+        <div class="name">{{ user.profile.name }}</div>
+        <div class="score">{{ score }}</div>
+      </li>
+    {{/each}}
+  </ul>
+</template>
 
 <template name="loginWithFacebook">
   <a href="{{ pathFor route='Profile' }}" class="mt100 btn is-facebook is-large {{# if isAuthenticated}}user{{/if}}">

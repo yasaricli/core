@@ -1,9 +1,9 @@
 * { -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent; outline:none; }
 
-body { padding:0px; margin:0px; background-color:#000; font-family: "Whitney A","Whitney B"; font-style: normal; -webkit-font-smoothing: antialiased; }
+body { padding:0px; margin:0px; background-color:#000; font-family: "Whitney A","Whitney B"; font-style: normal; -webkit-font-smoothing: antialiased; overflow:hidden; }
 
 #Surface { }
-#Surface .container { position:absolute; width:100%; height:100%; }
+#Surface .container { position:absolute; width:100%; height:100%; overflow-x: scroll; }
 
 .content { position:absolute; z-index:5; width:100%; }
 
@@ -19,6 +19,7 @@ body { padding:0px; margin:0px; background-color:#000; font-family: "Whitney A",
 canvas { position:absolute; border: none; }
 canvas#Background { z-index: 0; }
 canvas#Game { z-index: 1; }
+ul { list-style:none; padding:0px; margin:0px; }
 
 .over-score .label { color:#e86f69; margin-top:25px; }
 .over-score .scores { color:#ffdf8f; font-size:70px; }
@@ -55,3 +56,10 @@ canvas#Game { z-index: 1; }
 .btn.is-dkBlue:hover { background-color: #5981dc; }
 .btn.is-greyBlue { background-color: #818da7; color: #fff; }
 .btn.is-greyBlue:hover { background-color: #727f9d; }
+
+#Scores { color:#fff; text-align:center; margin-top:50px; }
+#Scores li { }
+#Scores li img { width:125px; border-radius: 65px; border:5px solid #fff; }
+#Scores li .name { font-weight: bold; font-size: 40px; }
+#Scores li .score { position:relative; margin-top:0px; }
+#Scores li .createdAt { padding: 10px; color: #ccc; font-weight: bold; }
