@@ -67,4 +67,4 @@ ul { list-style:none; padding:0px; margin:0px; }
 
 #ServerStatus { text-align:center; position: absolute; width: 100%; bottom: 15px; }
 #ServerStatus.connected { color:#93cd7e; }
-#ServerStatus.waiting { color:#cccccc; }
+#ServerStatus.waiting, #ServerStatus.connecting { color:#cccccc; }

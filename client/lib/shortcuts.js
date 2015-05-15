@@ -13,7 +13,7 @@ root.HELPERS = {
    * logged Everything you return a boolean value.
    * */
   itsOk: function() {
-    return this.isAuthenticated() && this.serverStatus().connected;
+    return Meteor.userId() && Meteor.status().connected;
   }
 };
 
