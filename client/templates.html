@@ -38,7 +38,9 @@
 <template name="index">
   {{ > loginWithFacebook }}
   <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
-  <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+  {{# if isAuthenticated }}
+    <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+  {{/if}}
 </template>
 
 <template name="finish">
