@@ -13,7 +13,7 @@ root.HELPERS = {
    * logged Everything you return a boolean value.
    * */
   itsOk: function() {
-    return this.isAuthenticated() && this.serverStatus();
+    return this.isAuthenticated() && this.serverStatus().connected;
   }
 };
 
