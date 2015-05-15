@@ -1,16 +1,7 @@
-Meteor.publishComposite('scores', function(_id) {
+Meteor.publishComposite('scores', function(limit) {
   return {
     find: function() {
-      var  uniqueScores = _.uniq(Scores.find({}, { sort: { score: -1 }, limit: 2 }).fetch(), function(score) {
-        return score.userId;
-      });
-      return Scores.find({
-        _id: {
-          $in: _.map(uniqueScores, function(score) {
-            return score._id;
-          })
-        }
-      });
+      return Scores.find({ }, { sort: { score: -1 }, limit: limit });
     },
     children: [
       {

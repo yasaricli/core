@@ -18,10 +18,21 @@ Router.route('/finish', {
 Router.route('/scores', {
   name: 'Scores',
   waitOn: function() {
-    return Meteor.subscribe('scores');
+    return Meteor.subscribe('scores', 10);
   }
 });
 
 Router.route('/profile/:_id', {
   name: 'Profile'
+});
+
+/*
+ * User Accounts configures
+ * */
+AccountsTemplates.configureRoute('ensureSignedIn', {
+  template: 'loginWithFacebook',
+});
+
+Router.plugin('ensureSignedIn', {
+  only: ['Scores']
 });
