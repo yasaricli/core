@@ -8,7 +8,12 @@ Router.route('/', {
 });
 
 Router.route('/game', {
-  name: 'Game'
+  name: 'Game',
+  waitOn: function() {
+    if (HELPERS.itsOk()) {
+      return Meteor.subscribe('game');
+    }
+  }
 });
 
 Router.route('/finish', {

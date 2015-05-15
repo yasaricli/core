@@ -1,3 +1,11 @@
+Meteor.publishComposite('game', function() {
+  return {
+    find: {
+      return Scores.find({ userId: this.userId }, { sort: { score: -1 }, limit: 1 });
+    }
+  }
+});
+
 Meteor.publishComposite('scores', function(limit) {
   return {
     find: function() {

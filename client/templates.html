@@ -38,16 +38,17 @@
 <template name="index">
   {{ > loginWithFacebook }}
   <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
-  {{# if isAuthenticated }}
+  {{# if itsOk }}
     <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
   {{/if}}
+  {{ > server }}
 </template>
 
 <template name="finish">
   <div class="over-score">
     <div class="label">SCORE</div>
     <div class="scores">{{ Core.getScore }}</div>
-    {{# if isAuthenticated }}
+    {{# if itsOk }}
       <div class="label">BEST</div>
       <div class="scores">{{ Core.getScore }}</div>
     {{/if}}
@@ -74,7 +75,7 @@
 </template>
 
 <template name="loginWithFacebook">
-  <a href="{{ pathFor route='Profile' }}" class="mt100 btn is-facebook is-large {{# if isAuthenticated}}user{{/if}}">
+  <a href="{{ pathFor route='Profile' }}" class="mt100 btn is-facebook is-large {{# if isAuthenticated }}user{{/if}}">
     {{# if isAuthenticated }}
       {{ currentUser.profile.name }}
     {{ else }}
@@ -86,5 +87,12 @@
 <template name="loading">
   <div class="loading">
     <img src="/images/loading.svg">
+  </div>
+</template>
+
+<template name="server">
+  <div id="ServerStatus" class="{{ serverStatus.status }}">
+    <i class="fa fa-server"></i>
+    <div>{{ serverStatus.status }}</div>
   </div>
 </template>

@@ -3,6 +3,17 @@ var root = this;
 root.HELPERS = {
   isAuthenticated: function() {
     return Meteor.userId();
+  },
+  serverStatus: function() {
+    return Meteor.status()
+  },
+
+  /*
+   * If members of the Internet and the user
+   * logged Everything you return a boolean value.
+   * */
+  itsOk: function() {
+    return this.isAuthenticated() && this.serverStatus();
   }
 };
 
