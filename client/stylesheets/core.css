@@ -11,8 +11,6 @@ body { padding:0px; margin:0px; background-color:#000; font-family: "Whitney A",
 .score { color:#ffdf8f; position: absolute; z-index: 5; font-weight: bold; font-size: 45px; margin:25px; }
 .over-score { color:#ffdf8f; position: relative; z-index: 5; font-weight: bold; font-size: 45px; margin:50px; display:block; text-align:center; }
 
-.mt100 { margin-top:100px!important; }
-
 /*
  * CANVAS UI
  * */
@@ -68,3 +66,15 @@ ul { list-style:none; padding:0px; margin:0px; }
 #ServerStatus { text-align:center; position: absolute; width: 100%; bottom: 15px; }
 #ServerStatus.connected { color:#93cd7e; }
 #ServerStatus.waiting, #ServerStatus.connecting { color:#cccccc; }
+
+/* Portrait */
+@media screen and (orientation:portrait) {
+  .menu-index { margin-top:50px; }
+}
+
+@media screen and (orientation:landscape) {
+  .menu-index { margin-top:35px; }
+  .menu-pause, .menu-finish { margin-top:10%; float: right; width: 50%; }
+  .over-score { float: left; margin-top: 10%; width:30%; }
+  .over-score .label { margin-top:0px; }
+}

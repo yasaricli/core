@@ -28,19 +28,23 @@
         <div class="label">SCORE</div>
         <div class="scores">{{ Core.getScore }}</div>
       </div>
-      <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large resume">RESUME</a>
-      <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
+      <div class="menu-pause">
+        <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large resume">RESUME</a>
+        <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
+      </div>
     </div>
   {{/if}}
   <canvas id="Game"></canvas>
 </template>
 
 <template name="index">
-  {{ > loginWithFacebook }}
-  <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
-  {{# if itsOk }}
-    <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
-  {{/if}}
+  <div class="menu-index">
+    {{ > loginWithFacebook }}
+    <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
+    {{# if itsOk }}
+      <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+    {{/if}}
+  </div>
   {{ > server }}
 </template>
 
@@ -48,13 +52,11 @@
   <div class="over-score">
     <div class="label">SCORE</div>
     <div class="scores">{{ Core.getScore }}</div>
-    {{# if itsOk }}
-      <div class="label">BEST</div>
-      <div class="scores">{{ Core.getScore }}</div>
-    {{/if}}
   </div>
-  <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large">RESTART</a>
-  <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
+  <div class="menu-finish">
+    <a href="{{ pathFor route='Game' }}" class="btn is-dkBlue is-large">RESTART</a>
+    <a href="{{ pathFor route='Index' }}" class="btn is-blue is-large">MAIN MENU</a>
+  </div>
 </template>
 
 <template name="profile">

@@ -16,7 +16,6 @@ root.vibrate = function(v) {
 
 root.Core = new function() {
   var self = this, player, canvas, contex;
-
   var FRAMERATE = 60,
 
 	    world = {
