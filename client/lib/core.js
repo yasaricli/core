@@ -344,24 +344,24 @@ root.Core = new function() {
 			}
 
 			player.angle += ( targetAngle - player.angle ) * 0.2;
-
 			player.energyRadiusTarget = ( player.energy / 100 ) * ( player.radius * 0.8 );
 			player.energyRadius += ( player.energyRadiusTarget - player.energyRadius ) * 0.2;
-
 			player.shield = { x: player.position.x + Math.cos( player.angle ) * player.radius, y: player.position.y + Math.sin( player.angle ) * player.radius };
 
 			// Shield
 			context.beginPath();
 			context.strokeStyle = '#3be2d4';
-			context.lineWidth = 8;
-			context.arc( player.position.x, player.position.y, player.radius, player.angle + 1.6, player.angle - 1.6, true );
+			context.shadowColor = '#3be2d4';
+      context.shadowBlur = 5;
+			context.lineWidth = 5;
+			context.arc(player.position.x, player.position.y, player.radius, player.angle + 1.6, player.angle - 1.6, true);
 			context.stroke();
 
 			// Core
 			context.beginPath();
-			context.fillStyle = "#249d93";
+			context.fillStyle = "#000000";
 			context.strokeStyle = "#3be2d4";
-			context.lineWidth = 3;
+			context.lineWidth = 2;
 
 			player.updateCore();
 
@@ -410,11 +410,18 @@ root.Core = new function() {
 		  	p.alpha += ( 1 - p.alpha ) * 0.1;
 
         // fillStyle type
-        context.fillStyle = p.fillStyle
+        context.lineWidth = p.lineWidth;
+        context.fillStyle = p.fillStyle;
+        context.strokeStyle = p.strokeStyle;
+
+        // shadow
+        context.shadowColor = p.shadowColor;
+        context.shadowBlur = p.shadowBlur;
 
 		  	context.beginPath();
 		  	context.arc(p.position.x, p.position.y, p.size/2, 0, Math.PI*2, true);
 		  	context.fill();
+        context.stroke();
 
 		  	var angle = Math.atan2( p.position.y - player.position.y, p.position.x - player.position.x );
 		  	if (playing.get()) {
@@ -608,7 +615,11 @@ function Enemy() {
 	this.size = 6 + ( Math.random() * 4 );
 	this.speed = 1;
 	this.type = 'enemy';
-  this.fillStyle = '#e1453d';
+  this.fillStyle = 'black';
+  this.lineWidth = 1;
+  this.strokeStyle = '#e1453d';
+  this.shadowColor = '#e1453d';
+  this.shadowBlur = 10;
 }
 Enemy.prototype = new Point();
 
@@ -618,7 +629,11 @@ function Energy() {
 	this.size = 10 + (Math.random()*6);
 	this.speed = 1;
 	this.type = 'energy';
-  this.fillStyle = '#3be2d4';
+  this.fillStyle = 'black';
+  this.lineWidth = 1;
+  this.strokeStyle = '#3be2d4';
+  this.shadowColor = '#3be2d4';
+  this.shadowBlur = 10;
 }
 
 Energy.prototype = new Point();

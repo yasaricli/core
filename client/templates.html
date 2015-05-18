@@ -10,12 +10,18 @@
     <div class="container">
       {{ > yield }}
     </div>
-    {{ > background }}
   </div>
 </template>
 
-<template name="background">
-  <canvas id="Background"></canvas>
+<template name="index">
+  <div class="menu-index">
+    {{ > loginWithFacebook }}
+    <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
+    {{# if itsOk }}
+      <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
+    {{/if}}
+  </div>
+  {{ > server }}
 </template>
 
 <template name="game">
@@ -35,17 +41,6 @@
     </div>
   {{/if}}
   <canvas id="Game"></canvas>
-</template>
-
-<template name="index">
-  <div class="menu-index">
-    {{ > loginWithFacebook }}
-    <a href="{{ pathFor route='Game' }}" class="btn is-blue is-large start">START</a>
-    {{# if itsOk }}
-      <a href="{{ pathFor route='Scores' }}" class="btn is-red is-large">SCORES</a>
-    {{/if}}
-  </div>
-  {{ > server }}
 </template>
 
 <template name="finish">
